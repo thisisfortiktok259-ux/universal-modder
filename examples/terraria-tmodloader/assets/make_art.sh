@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # Rebuilds FalArsenal/Assets/*.png and FalArsenal/icon.png from fal-generated art, with the repo's CLI.
 #
-#   ./make_art.sh                   # build the sprites; raw art missing from gen/ is generated (FAL_KEY)
+#   ./make_art.sh                   # build the sprites; missing raw art writes a Codex chat request
 #   GEN=~/my-art ./make_art.sh      # raw art somewhere else; OUT=... / ICON=... redirect the results
 #
-# 1. fal flux/dev draws each object on a flat white background -> gen/<name>.png (1024x1024). The art
-#    this mod shipped with is in gen/ as .jpg (flux/dev's default format), so nothing is generated
-#    unless you delete a file: there is no fixed seed, so a new call draws something new.
+# 1. The original art is in gen/ as .jpg. Missing images write briefs for the Codex chat;
+#    generate and import the replacement PNG, then rerun this local conversion script.
 # 2. `um sprite` cuts the background out with a flood fill from the border (interior whites like eyes
 #    survive), trims, and scales once with nearest neighbour into the frame sizes the mod uses. Items
 #    point right, NPC sprites face left, NPC frames are stacked vertically (the game divides the texture
@@ -26,7 +25,7 @@ q() { um "$@" >/dev/null; }   # intermediate steps: quiet
 # Python with Pillow, for the two steps um has no command for (um's own environment when uv is around)
 py() { if command -v uv >/dev/null 2>&1; then uv run --quiet --project "$ROOT" python - "$@"; else python3 - "$@"; fi; }
 
-# ------------------------------------------------------------------ 1. raw art: fal flux/dev
+# ------------------------------------------------------------------ 1. local art / Codex briefs
 
 STYLE="16-bit pixel art game sprite in the style of Terraria, crisp dark outline, limited palette, centered, plain flat white background, no shadow, no text"
 
@@ -34,9 +33,11 @@ raw() { local f; for f in "$GEN/$1.png" "$GEN/$1.jpg"; do [ -f "$f" ] && { echo 
 
 gen() {   # gen <name> "<what to draw>"
   raw "$1" >/dev/null && return
-  # `um fal run` sends exactly these inputs (the image recipe adds fields meant for its default model)
-  um fal run fal-ai/flux/dev "prompt=$2. $STYLE" image_size=square_hd num_images:=1 num_inference_steps:=40 \
-    output_format=png --out "$GEN" --name "$1"
+  if [ ! -f "$GEN/$1.request.json" ]; then
+    um assets request "$2. $STYLE" --kind sprite --opaque --out "$GEN" --name "$1"
+  fi
+  echo "Missing raw image $1. Generate its request in the Codex chat, import the PNG, then rerun." >&2
+  exit 2
 }
 
 gen missile_launcher "a military shoulder-mounted rocket launcher bazooka seen from the side pointing right, olive green metal tube with yellow and black hazard stripes, grip and scope"

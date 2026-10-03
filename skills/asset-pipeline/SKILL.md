@@ -5,7 +5,7 @@ description: Turn generated or hand-made art into exactly what a game engine loa
 
 # Asset pipeline: from art to engine-ready files
 
-The fal-assets skill makes pictures. This skill makes **files the game accepts**: the right size, frame
+The codex-assets skill makes 2D pictures in a Codex chat. This skill makes **files the game accepts**: the right size, frame
 layout, orientation, alpha, palette and format. All commands are `um sprite ...` and `um render3d ...`; each
 has `--help` with examples.
 
@@ -38,16 +38,15 @@ um sprite preview item.png look.png --scale 6             # checkerboard + zoom:
 ```
 - **Pixel art:** scale once, with nearest neighbour, to the final size. Never scale pixel art twice.
 - **Painted / HD art:** use `fit --smooth`.
-- **Real frames:** for animation frames beyond bob/squash, generate each frame with the fal edit endpoint
+- **Real frames:** for animation frames beyond bob/squash, edit each frame with the native chat image tool
   using the base sprite as reference ("same drone, rotors tilted, frame 2 of 4"), then cut out and fit each
   frame the same way. Or go 3D (below).
 
 ## 3. 3D → sprites (consistent angles and animations)
 ```bash
-um fal model3d concept.png --name unit                   # textured GLB (Trellis 2 by default)
-um render3d assets/gen/unit.glb frames/ --preset aoe2 --length 80 --forward-yaw -90 \
+um render3d unit.glb frames/ --preset aoe2 --length 80 --forward-yaw -90 \
   --anims idle:10:bob,walk:12:walk,attack:16:lunge,death:20:die --shadows --samples 40
-um render3d assets/gen/unit.glb side/ --preset side --canvas 128 --length 110 --engine eevee   # platformer facing R + L
+um render3d unit.glb side/ --preset side --canvas 128 --length 110 --engine eevee   # platformer facing R + L
 ```
 Presets:
 
@@ -65,16 +64,16 @@ Presets:
 - `--shadows` adds a shadow-only pass (`*_s.png`) for engines that keep shadows in their own layer.
 - Motions: bob, walk, lunge, die, wreck, spin.
 - Then pack with `um sprite sheet`, or with an engine writer (e.g. `examples/aoe2-de-civ/sld.py`).
-- Needs Blender (`blender` on PATH or `BLENDER=...`). Cycles uses the GPU when available.
+- Supply your own licensed GLB, or make one with local modeling tools. Needs Blender (`blender` on PATH or `BLENDER=...`). Cycles uses the GPU when available.
 - Dark generated textures: raise `--sun` / `--ambient`, or brighten in post.
-- For game-ready 3D (not sprites), remesh with `um fal run tripo3d/tripo/remesh mesh_url=@unit.glb face_limit:=8000`, then convert in Blender
+- For game-ready 3D (not sprites), prepare or remesh a licensed model in Blender, then convert
   (GLB → FBX/OBJ) with the engine's scale and axis convention: Unity Y-up metres, Unreal Z-up
   centimetres, Bethesda NIF via PyNifly.
 
 ## 4. Textures and materials
-- **Tiling:** `um fal texture` generates it tiled. Check with `um sprite tile-preview t.png t3.png`. Fix
+- **Tiling:** request a seamless 2D texture in the Codex chat and check with `um sprite tile-preview t.png t3.png`. Fix
   seams on other images with `um sprite seamless`.
-- **PBR sets:** `um fal pbr`. Convert to the engine's packing: Unreal ORM (occlusion/roughness/metal in RGB),
+- **PBR sets:** obtain or author licensed material maps with suitable local tools. Convert to the engine's packing: Unreal ORM (occlusion/roughness/metal in RGB),
   Unity metallic-smoothness (smoothness = 1 - roughness in alpha).
 - **DDS:** texconv (DirectXTex) or `magick` with DXT settings. BC7 for quality, BC1 for cutout sprites, BC3
   when alpha is soft.

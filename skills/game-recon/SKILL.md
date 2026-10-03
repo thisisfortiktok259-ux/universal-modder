@@ -19,7 +19,7 @@ um scan "<name or folder>"     # engine, version, exes (.NET?), anti-cheat, load
 um scan "<game>" --json        # the same, machine-readable
 ```
 `um` lives at `bin/um` in the universal-modder repo (plugins and clones put it on PATH). Anywhere else:
-`uv tool install git+https://github.com/rehan-remade/universal-modder`.
+`python -m pip install .` from the fork checkout, then run `python -m um` if `um` is not on PATH.
 
 `um scan` reads files only. It indexes the install (bounded), sniffs PE headers, the Unity/Godot/GameMaker
 headers and the Unreal version string, maps known games to their community loader, and points to the

@@ -1,13 +1,13 @@
 {
   "name": "universal-modder",
-  "version": "0.2.0",
-  "description": "Mod almost any game you own with an AI agent: engine recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos, and a shared knowledge base of how games were modded.",
+  "version": "0.3.0",
+  "description": "Game modding tools and knowledge for Codex: native chat image generation, local sprite processing, engine recon, in-game testing and showcase editing. No asset API key required.",
   "author": {
     "name": "Rehan",
     "url": "https://github.com/rehan-remade"
   },
-  "homepage": "https://github.com/rehan-remade/universal-modder",
-  "repository": "https://github.com/rehan-remade/universal-modder",
+  "homepage": "https://github.com/thisisfortiktok259-ux/universal-modder",
+  "repository": "https://github.com/thisisfortiktok259-ux/universal-modder",
   "license": "MIT",
   "keywords": [
     "game-modding",
@@ -17,10 +17,10 @@
     "tmodloader",
     "bepinex",
     "ue4ss",
-    "fal",
     "sprites",
     "game-assets",
-    "mcp",
-    "agent-skills"
+    "agent-skills",
+    "codex",
+    "image-generation"
   ]
 }

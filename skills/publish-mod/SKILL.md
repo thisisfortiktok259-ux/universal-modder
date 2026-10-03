@@ -9,9 +9,9 @@ description: Package and release a finished game mod. Covers the pre-release lin
 ```bash
 um publish check ./MyMod --game "<game install folder>"
 ```
-- **FAIL:** files byte-identical to game files, leaked keys (fal/Anthropic/OpenAI/GitHub/AWS), `.env` files.
+- **FAIL:** files byte-identical to game files, leaked keys, `.env` files.
 - **WARN:** decompiler fingerprints in source (`FUN_`/`DAT_`/`sub_` names, "Decompiled with" headers), large
-  engine archives, absolute user paths, a missing README, fal assets without credit.
+  engine archives, absolute user paths, a missing README, generated assets without credit.
 
 Fix every FAIL. Resolve each WARN deliberately. For example, AoE2 data mods do ship a modified `.dat`, which
 is the platform's norm.
@@ -36,9 +36,9 @@ is the platform's norm.
 - Credits:
   - the loader and libraries;
   - references you learned from;
-  - **"Art/audio generated with fal (fal.ai) using <models>"** (`fal_manifest.jsonl` lists them);
+  - credit generated art accurately, using the local asset manifest when present; credit other audio and 3D sources separately;
   - honest AI disclosure (which agent and model built it).
-- License for your code (MIT/Apache is common). Your assets' terms follow the models' licenses.
+- License for your code (MIT/Apache is common). Check the terms of each asset source before release.
 
 ## 4. Version and changelog
 Use semver in the manifest/build file, name the supported game version, and keep a changelog. When the game
@@ -46,6 +46,6 @@ updates, re-run the in-game test scene before bumping.
 
 ## 5. The post
 - Lead with the video: the showcase-video skill; 20-45 s, gameplay within 2-3 s.
-- Post text: the hook, what it is, the "how" credit (which agent + fal built it), a link.
+- Post text: the hook, what it is, accurate art/source credits, a link.
 - If the video uses anyone else's footage, credit them by handle and ask first.
 - Publishing is always the user's call. Draft it, show them, and let them press the button.

@@ -1,4 +1,1 @@
-# Codex: project-scoped MCP (trusted projects). fal's hosted MCP server, key from $FAL_KEY.
-[mcp_servers.fal]
-url = "https://mcp.fal.ai/mcp"
-bearer_token_env_var = "FAL_KEY"
+# 2D image generation uses the native Codex chat tool. No asset MCP server or API key.

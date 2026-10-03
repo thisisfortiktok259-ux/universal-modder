@@ -1,14 +1,14 @@
 {
-  "name": "universal-modder",
+  "name": "universal-modder-codex",
   "interface": {
-    "displayName": "universal-modder"
+    "displayName": "Universal Modder for Codex"
   },
   "plugins": [
     {
       "name": "universal-modder",
       "source": {
         "source": "url",
-        "url": "https://github.com/rehan-remade/universal-modder.git"
+        "url": "https://github.com/thisisfortiktok259-ux/universal-modder.git"
       },
       "policy": {
         "installation": "AVAILABLE",

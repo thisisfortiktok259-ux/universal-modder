@@ -1,13 +1,13 @@
 {
   "name": "universal-modder",
-  "version": "0.2.0",
-  "description": "Mod almost any game you own with an AI agent: engine recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos, and a shared knowledge base of how games were modded.",
+  "version": "0.3.0",
+  "description": "Game modding tools and knowledge for Codex: native chat image generation, local sprite processing, engine recon, in-game testing and showcase editing. No asset API key required.",
   "author": {
     "name": "Rehan",
     "url": "https://github.com/rehan-remade"
   },
-  "homepage": "https://github.com/rehan-remade/universal-modder",
-  "repository": "https://github.com/rehan-remade/universal-modder",
+  "homepage": "https://github.com/thisisfortiktok259-ux/universal-modder",
+  "repository": "https://github.com/thisisfortiktok259-ux/universal-modder",
   "license": "MIT",
   "keywords": [
     "game-modding",
@@ -17,27 +17,26 @@
     "tmodloader",
     "bepinex",
     "ue4ss",
-    "fal",
     "sprites",
     "game-assets",
-    "mcp",
-    "agent-skills"
+    "agent-skills",
+    "codex",
+    "image-generation"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "universal-modder",
-    "shortDescription": "Mod any game you own",
-    "longDescription": "Mod almost any game you own with an AI agent: engine recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos, and a shared knowledge base of how games were modded.",
+    "displayName": "Universal Modder for Codex",
+    "shortDescription": "Game mods with native Codex sprites",
+    "longDescription": "Game modding tools and knowledge for Codex: native chat image generation, local sprite processing, engine recon, in-game testing and showcase editing. No asset API key required.",
     "developerName": "Rehan",
     "category": "Developer Tools",
     "capabilities": [
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/rehan-remade/universal-modder",
+    "websiteURL": "https://github.com/thisisfortiktok259-ux/universal-modder",
     "defaultPrompt": [
-      "Mod this game: add a new weapon with fal-generated sprites",
+      "Mod this game: add a new weapon with sprites generated in the Codex chat",
       "What engine is this game and how do people mod it?",
       "Search the modding knowledge base for this game"
     ],

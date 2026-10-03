@@ -1,8 +1,9 @@
-"""Offline tests for the pieces that don't need a game, a GPU or a fal key.
+"""Offline tests for the pieces that don't need a game, a GPU or an asset API key.
 
     uv run --with pytest pytest -q
 """
 import json
+import shutil
 import struct
 import subprocess
 import sys
@@ -13,7 +14,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from um import fal, publish, scan, sprite, video  # noqa: E402
+from um import publish, scan, sprite, video  # noqa: E402
 
 
 # --------------------------------------------------------------------------- scan
@@ -169,15 +170,6 @@ def test_seamless_edges_match():
     assert before > 200 and after < 12
 
 
-# --------------------------------------------------------------------------- fal (offline parts)
-
-def test_kv_and_urls(tmp_path):
-    assert fal._kv(["prompt=a cat", "num_images:=2", "flag:=true"]) == {"prompt": "a cat", "num_images": 2, "flag": True}
-    res = {"images": [{"url": "https://v3.fal.media/a.png", "content_type": "image/png"}, {"url": "https://v3.fal.media/b.png"}],
-           "mask_image": {"url": "https://v3.fal.media/m.png"}}
-    assert [u for _, u, _ in fal._urls_in(res)] == ["https://v3.fal.media/a.png", "https://v3.fal.media/b.png", "https://v3.fal.media/m.png"]
-
-
 # --------------------------------------------------------------------------- publish
 
 def test_publish_check(tmp_path, capsys):
@@ -191,12 +183,12 @@ def test_publish_check(tmp_path, capsys):
     assert publish.check(str(tmp_path / "mod"), str(tmp_path / "game")) == 1
     out = capsys.readouterr().out
     assert "game file copied verbatim" in out and "FAL_KEY assignment" in out and "Ghidra auto-name" in out
-    assert "decompiler header x1 in src/Mod.cs" in out and "README.md" not in out.split("decompiler header")[-1].split("\n")[0]
+    assert "decompiler header x1 in src/Mod.cs" in out.replace("\\", "/") and "README.md" not in out.split("decompiler header")[-1].split("\n")[0]
 
 
 # --------------------------------------------------------------------------- video
 
-@pytest.mark.skipif(subprocess.run(["which", "ffmpeg"], capture_output=True).returncode, reason="needs ffmpeg")
+@pytest.mark.skipif(shutil.which("ffmpeg") is None, reason="needs ffmpeg")
 def test_compile_small_edl(tmp_path):
     for i, color in enumerate(["red", "blue"]):
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", f"testsrc2=s=640x360:d=3:r=30", "-f", "lavfi", "-i", "sine=f=440:d=3",
@@ -224,7 +216,7 @@ def test_repo_knowledge_is_valid():
         fails, _ = kb.check_note(p, root)
         assert not fails, (p, fails)
     idx, rows = kb.build_index(root)
-    assert (root / "INDEX.md").read_text() == idx, "run `um kb index`"
+    assert (root / "INDEX.md").read_text(encoding="utf-8") == idx, "run `um kb index`"
     assert len(rows) >= 7
 
 
@@ -236,13 +228,13 @@ def test_kb_new_check_search(tmp_path):
     p = kb.new_note(root, "Hades II", "A new boon god", agent="Codex (gpt-6)", route="loader-api")
     fails, _ = kb.check_note(p, root)
     assert any("unfilled template text" in f for f in fails)          # a fresh scaffold must not pass
-    good = p.read_text()
+    good = p.read_text(encoding="utf-8")
     good = good.replace("FILL IN: exact build", "1.0.1 (Steam)").replace("anti_cheat: FILL IN", "anti_cheat: none")
     good = good.replace("> Two to four sentences: what you built", "> Added a boon god via a Lua mod loader")
     good = good.replace("The most valuable section. Numbered; each one symptom → cause → fix.", "")
     good = good.replace("1. **Symptom.** What you saw. **Cause:** what it really was. **Fix:** what worked.",
                         "1. **Boons never offered.** **Cause:** pool cached at load. **Fix:** register before the run starts.")
-    p.write_text(good)
+    p.write_text(good, encoding="utf-8")
     fails, _ = kb.check_note(p, root)
     assert not fails, fails
     res = kb.search(root, ["boon"])

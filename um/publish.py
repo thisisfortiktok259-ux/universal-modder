@@ -7,7 +7,7 @@ FAIL  files byte-identical to files in the game install (redistributing game fil
 WARN  decompiler fingerprints in source (FUN_xxxx / DAT_xxxx / sub_XXXX, "// Decompiled with", ILSpy/dnSpy
       headers) - reimplement or reference instead of shipping decompiled code; big engine archives
       (.pak/.bsa/.ba2/.vpk/.rpf/.utoc...) that may carry original assets; absolute user paths; no README /
-      credits; fal-generated assets listed in fal_manifest.jsonl without an attribution line
+      credits; assets listed in assets_manifest.jsonl without a source attribution line
 Modelled on IW4L's publish-check. It is a lint, not legal advice: when in doubt ship a patch/converter that
 runs on the user's own install ("bring your own game files") instead of the files themselves.
 """
@@ -102,6 +102,11 @@ def check(mod: str, game: str | None = None) -> int:
         readmes = [f for f in files if f.name.lower().startswith(("readme", "credits"))]
         if not any("fal" in f.read_text(errors="replace").lower() for f in readmes):
             warns.append("fal-generated assets (fal_manifest.jsonl) but no credit line in README/CREDITS")
+    if any(f.name == "assets_manifest.jsonl" for f in files):
+        readmes = [f for f in files if f.name.lower().startswith(("readme", "credits"))]
+        if not any(re.search(r"\b(?:codex|openai|credits?|attribution|source|licensed?)\b",
+                             f.read_text(encoding="utf-8", errors="replace"), re.I) for f in readmes):
+            warns.append("assets_manifest.jsonl present but no source credit line in README/CREDITS; credit the actual creator/tool")
     for x in fails:
         print("FAIL ", x)
     for x in warns:

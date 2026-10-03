@@ -14,23 +14,22 @@ repo, they almost always want to **mod a game**, or to learn how a game was modd
 
 ## Tools
 - **`bin/um`** is the Python CLI, and it sets itself up with `uv`.
-  - Put it on PATH: `export PATH="$PWD/bin:$PATH"`, or install it anywhere with
-    `uv tool install git+https://github.com/rehan-remade/universal-modder`.
+  - Put it on PATH: `export PATH="$PWD/bin:$PATH"`, or install this fork with
+    `python -m pip install .` and run `python -m um` (also works on Windows).
   - Every group has `--help`:
     - `scan`: installed games, engine, anti-cheat, loaders, saves, routes
-    - `fal`: sprites, textures, PBR, 3D, rigs, SFX, music, voice, video via fal's REST API
+    - `assets`: local 2D request briefs and imported PNG provenance; generation happens in Codex chat
     - `sprite` / `render3d`: art → engine-ready frames
     - `win`: launch, screenshot, input, record on Windows (also from WSL)
     - `video`: contact sheets and EDL showcase edits
     - `backup`: snapshot and restore saves
     - `publish`: pre-release lint
     - `kb`: the knowledge base
-- **fal MCP server:** `https://mcp.fal.ai/mcp` with header `Authorization: Bearer $FAL_KEY`.
-  - It's pre-configured per agent: `.mcp.json` (Claude Code), `.codex/config.toml` (Codex),
-    `.cursor/mcp.json` (Cursor), `.vscode/mcp.json` (VS Code / Copilot), `gemini-extension.json`
-    (Gemini CLI).
-  - No MCP? `um fal` does the same over REST.
-- **Skills** (`skills/*/SKILL.md`, Agent Skills format) are also linked where each agent looks for them:
+- **2D creation:** use Codex's native chat image tool when available, then save a PNG and process it
+  with `um sprite`. `um assets request` and `um assets import` record a brief and provenance locally;
+  neither invokes image generation. A standalone CLI cannot call the chat tool. Use licensed files or
+  local tools for 3D, audio and video.
+- **Skills** (`skills/*/SKILL.md`, Agent Skills format) are also linked where agents look for them:
   `.agents/skills` (Codex and others), `.claude/skills`, `.gemini/skills`, `.github/skills`.
 - **Engine playbooks:** `skills/mod-any-game/references/engines/`.
 - **Worked examples:** `examples/terraria-tmodloader`, `examples/aoe2-de-civ`,

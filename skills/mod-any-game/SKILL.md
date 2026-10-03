@@ -1,6 +1,6 @@
 ---
 name: mod-any-game
-description: Mod a PC game the user owns, taking an idea to working in the real game and recorded. It covers new items, weapons, enemies, bosses, units, civilizations, mechanics, art, sound, VR and cross-game mashups. Use when the user wants to mod, extend, hack on, reverse engineer or mash up a game ("add a nuke to Terraria", "make a new civ for Age of Empires", "put Minecraft inside X", "can I mod this game?"). It covers recon (engine, loaders, anti-cheat), choosing the route, a safe lab, a first vertical slice, fal-generated assets, in-game verification and a showcase clip.
+description: Mod a PC game the user owns, taking an idea to working in the real game and recorded. It covers new items, weapons, enemies, bosses, units, civilizations, mechanics, art, sound, VR and cross-game mashups. Use when the user wants to mod, extend, hack on, reverse engineer or mash up a game ("add a nuke to Terraria", "make a new civ for Age of Empires", "put Minecraft inside X", "can I mod this game?"). It covers recon (engine, loaders, anti-cheat), choosing the route, a safe lab, a first vertical slice, 2D asset creation, in-game verification and a showcase clip.
 ---
 
 # Mod any game
@@ -20,20 +20,21 @@ MW2) showed about scaling up.
 ## Your tools
 
 `um` is the toolkit CLI. Plugin installs and clones put it on PATH (it lives at `bin/um` in the repo).
-Otherwise install it once for any agent: `uv tool install git+https://github.com/rehan-remade/universal-modder`
+Otherwise install it once for any agent: `uv tool install git+https://github.com/thisisfortiktok259-ux/universal-modder`
 (or `pipx install ...`). Every group has `--help` with examples.
 
 | Need | Command |
 |---|---|
 | What games are installed, what engine, what anti-cheat, where saves live | `um scan --list`, `um scan "<game>"` |
-| Sprites, textures, PBR, 3D models, rigs, SFX, music, voice, video (fal) | `um fal <recipe>`, or the fal MCP (`search_models`, `run_model`) |
+| 2D sprites, icons, concept art and textures | Codex chat image generation; optional `um assets request` / `um assets import` for local provenance |
+| 3D models, rigs, audio and video | User-owned licensed files or appropriate local tools |
 | Cut out / fit / pixelate / pack sprites; 3D model → sprite frames | `um sprite ...`, `um render3d ...` |
 | Launch, screenshot, click/type, record a Windows game (also from WSL) | `um win ...` |
 | Snapshot saves before touching them; undo | `um backup create/diff/restore` |
 | Cut a showcase video | `um video contact/compile/mux` |
 | Lint a mod before sharing (game files, decompiled code, secrets) | `um publish check` |
 
-Companion skills: **game-recon**, **reverse-engineering**, **fal-assets**, **asset-pipeline**,
+Companion skills: **game-recon**, **reverse-engineering**, **codex-assets**, **asset-pipeline**,
 **game-automation**, **showcase-video**, **mashup-mods**, **publish-mod**, **share-field-notes**.
 
 ## The loop
@@ -51,7 +52,7 @@ Companion skills: **game-recon**, **reverse-engineering**, **fal-assets**, **ass
 - **Search the knowledge base first.** Run `um kb search "<game>"` and `um kb search "<engine>"`. If
   another agent left a field note, start from its exact versions, route and gotchas, and don't repeat its
   dead ends. Without `um`, read
-  https://github.com/rehan-remade/universal-modder/blob/main/knowledge/INDEX.md.
+  `knowledge/INDEX.md` in this checkout.
 - Run `um scan "<game>"`. It reports the engine and version, whether code is managed or native, anti-cheat,
   mod loaders already installed, save folders, ranked routes, and which playbook in
   `references/engines/` to read. Read that playbook.
@@ -100,12 +101,13 @@ Take one item, unit or weapon all the way through with placeholder art. Define i
 appears and works, from the log plus a screenshot you actually look at. Only then widen. Commit each working
 step in the mod's own git repo.
 
-### 6. Assets (fal-assets and asset-pipeline skills)
+### 6. Assets (codex-assets and asset-pipeline skills)
 Study the game's own assets first: size, palette, outline, camera angle, facing, frame layout. Then generate
-with `um fal`. Every call is recorded in `fal_manifest.jsonl`. Convert with `um sprite` / `um render3d` into
+2D art with the native Codex chat tool. Optionally record a local request with `um assets request`, then
+import the PNG with `um assets import` to record provenance. Convert with `um sprite` / `um render3d` into
 exactly what the engine loads.
-- **Consistency across many angles and frames:** generate one concept, turn it into 3D
-  (`um fal model3d`), then render every heading from the game's camera (`um render3d --preset aoe2`).
+- **Consistency across many angles and frames:** edit from a base 2D image, checking each result; for
+  complex rotations, use a licensed or locally modeled 3D asset with `um render3d --preset aoe2`.
 - **Pixel-art games:** generate on a flat background or with transparency, cut out, then do one
   nearest-neighbour fit to the frame size.
 
@@ -135,7 +137,7 @@ Choose moments from a contact sheet, then cut 20-45 s with one-line titles and a
 
 ### 9. Package and publish (the publish-mod skill)
 Run `um publish check <mod> --game "<install>"`. Write a README with install steps. Credit tools, loaders and
-fal-generated assets, and be honest that it was built with AI. Ship no game files.
+generated assets, and be honest that it was built with AI. Ship no game files.
 
 ### 10. Leave a field note (the share-field-notes skill)
 Turn `MODLOG.md` into a knowledge-base note (`um kb new ...`, then `um kb check`). Cover:
